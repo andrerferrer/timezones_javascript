@@ -10,9 +10,14 @@ The important data for us are:
 ![image](https://user-images.githubusercontent.com/45776359/113037681-04535e00-916c-11eb-9365-e460f5d22ca6.png)
 
 
-## The idea
+## The concept
 So, if someone is in Rio, their offset is -3 from UTC (time 0).
-If someone is in Berlin (+1) 
+
+If someone is in Berlin, their offset is +1.
+
+Hence, if the time in Rio is 12h, the time in Berlin will be that plus the difference of the timezones: `12 + 4 = 16`.
+
+The API, nonetheless, will give us that number in EPOCH -> https://en.wikipedia.org/wiki/Unix_time
 
 ## How to transform EPOCH in milisseconds into something that we can work with?
 
@@ -20,18 +25,44 @@ If someone is in Berlin (+1)
 const currentTimeUTC = data.dt;
 const timezoneOffset = data.timezone;
 const localTime = currentTimeUTC + timezoneOffset; // This is the current time locally in UNIX EPOCH in seconds -> https://en.wikipedia.org/wiki/Unix_time
-const localTimeInMilliseconds = localTime * 1000;
 
-// we need to handle the user's offset
-const userTime = new Date()
-const userOffsetInMinutes = userTime.getTimezoneOffset()
+console.log(localTime)
+// If you test this number on https://www.epochconverter.com/, you should receive the desired time.
+```
+## But how to work with it in Javascript?
+
+```js
+// we need to transform the localTime to milliseconds (because JS is weird)
+const localTimeInMilliseconds = localTime * 1000;
+// and create a new date with that
+const currentTime = new Date( localTimeInMilliseconds ); 
+
+```
+
+## There's a catch, though❗
+
+When we run `new Date()`, Javascript will apply our current offset in the computer.
+
+So, there are three timezones to handle:
+
+1. the UTC (+0)
+2. the offset (Where we're looking for. e.g. Rio is -3 )
+3. the user's computer offset 
+
+We did handle the first two. But not the last one.
+
+How to do it then?
+```js
+// we need to discount the user's offset
+const userCurrentTime = new Date()
+const userOffsetInMinutes = userCurrentTime.getTimezoneOffset()
 const currentUserOffsetInMilliseconds = userOffsetInMinutes * 60 * 1000;
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-const currentTime = new Date( localTimeInMilliseconds + currentUserOffsetInMilliseconds ); 
+const finalTimeThankGod = new Date( localTimeInMilliseconds + currentUserOffsetInMilliseconds ); 
 ```
 
- ## And how to make it a nice message?
+ ## And how to turn it into a nice message?
  ```js
   const timeOptions = {
     weekday: 'long',
@@ -43,5 +74,5 @@ const currentTime = new Date( localTimeInMilliseconds + currentUserOffsetInMilli
   };
   
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
-  const niceMessage = currentTime.toLocaleDateString('en', timeOptions); 
+  const niceMessage = finalTimeThankGod.toLocaleDateString('en', timeOptions); 
 ```
