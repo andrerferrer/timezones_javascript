@@ -15,7 +15,7 @@ So, if someone is in Rio, their offset is -3 from UTC (time 0).
 
 If someone is in Berlin, their offset is +1.
 
-Hence, if the time in Rio is 12h, the time in Berlin will be that plus the difference of the timezones: `12 + 4 = 16`.
+Hence, if the time in Rio is 12h, the time in Berlin will be that plus the difference of the offsets: `12 + 4 = 16`.
 
 The API, nonetheless, will give us that number in EPOCH -> https://en.wikipedia.org/wiki/Unix_time
 
@@ -26,8 +26,8 @@ The API, nonetheless, will give us that number in EPOCH -> https://en.wikipedia.
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
 const currentTimeUTC = data.dt; 
 
-const timezoneOffset = data.timezone; // Rio's timezoneOffset in seconds is -10800, for example
-const localTime = currentTimeUTC + timezoneOffset; // This is the current time locally in UNIX EPOCH in seconds -> https://en.wikipedia.org/wiki/Unix_time
+const localOffset = data.timezone; // Rio's localOffset in seconds is -10800 (-3h), for example
+const localTime = currentTimeUTC + localOffset; // This is the current time locally in UNIX EPOCH in seconds -> https://en.wikipedia.org/wiki/Unix_time
 
 console.log(localTime)
 // If you test this number on https://www.epochconverter.com/, you should receive the desired time.
@@ -46,7 +46,7 @@ const currentTime = new Date( localTimeInMilliseconds );
 
 When we run `new Date()`, Javascript will apply our current offset in the computer.
 
-So, there are three timezones to handle:
+So, there are three offsets to handle:
 
 1. the UTC (+0)
 2. the offset (Where we're looking for. e.g. Rio is -3 )
