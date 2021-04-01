@@ -22,7 +22,10 @@ The API, nonetheless, will give us that number in EPOCH -> https://en.wikipedia.
 ## How to transform EPOCH in milisseconds into something that we can work with?
 
 ```js
-const currentTimeUTC = data.dt;
+// sometimes, "data.dt" is lagging some minutes. You can use "Date.now()" instead
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+const currentTimeUTC = data.dt; 
+
 const timezoneOffset = data.timezone;
 const localTime = currentTimeUTC + timezoneOffset; // This is the current time locally in UNIX EPOCH in seconds -> https://en.wikipedia.org/wiki/Unix_time
 
@@ -59,10 +62,29 @@ const userOffsetInMinutes = userCurrentTime.getTimezoneOffset()
 const currentUserOffsetInMilliseconds = userOffsetInMinutes * 60 * 1000;
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-const finalTimeThankGod = new Date( localTimeInMilliseconds + currentUserOffsetInMilliseconds ); 
+const localDateTime = new Date( localTimeInMilliseconds + currentUserOffsetInMilliseconds ); 
 ```
 
- ## And how to turn it into a nice message?
+## Refactoring
+
+We can also represent all of that as: 
+
+```js
+const currentTime = new Date( Date.now() + (data.timezone * 1000) + new Date().getTimezoneOffset() * 60 * 1000 )
+```
+
+## Another solution
+```js
+// get current time for the user
+const now = new Date();
+// get location offset and add to the user offset (in hours)
+const localOffsetInHours = data.timezone / 60 / 60 + new Date().getTimezoneOffset() / 60
+// set "now" to the local DateTime
+now.setUTCHours( now.getUTCHours() + localOffsetInHours);
+```
+
+
+## And how to turn it into a nice message?
  ```js
   const timeOptions = {
     weekday: 'long',
@@ -74,5 +96,5 @@ const finalTimeThankGod = new Date( localTimeInMilliseconds + currentUserOffsetI
   };
   
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
-  const niceMessage = finalTimeThankGod.toLocaleDateString('en', timeOptions); 
+  const niceMessage = localDateTime.toLocaleDateString('en', timeOptions); 
 ```
