@@ -98,3 +98,7 @@ localDateTime.setUTCHours( now.getUTCHours() + localOffsetInHours);
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
   const niceMessage = localDateTime.toLocaleDateString('en', timeOptions); 
 ```
+
+## Going further
+
+* https://ayushgp.github.io/date-and-time-in-javascript/
