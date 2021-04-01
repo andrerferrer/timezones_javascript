@@ -26,7 +26,7 @@ The API, nonetheless, will give us that number in EPOCH -> https://en.wikipedia.
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
 const currentTimeUTC = data.dt; 
 
-const timezoneOffset = data.timezone;
+const timezoneOffset = data.timezone; // Rio's timezoneOffset in seconds is -10800, for example
 const localTime = currentTimeUTC + timezoneOffset; // This is the current time locally in UNIX EPOCH in seconds -> https://en.wikipedia.org/wiki/Unix_time
 
 console.log(localTime)
