@@ -77,10 +77,16 @@ const localDateTime = new Date( Date.now() + (data.timezone * 1000) + new Date()
 ```js
 // get current time for the user
 const localDateTime = new Date();
+
 // get location offset and add to the user offset (in hours)
-const localOffsetInHours = data.timezone / 60 / 60 + new Date().getTimezoneOffset() / 60
-// set "now" to the local DateTime
-localDateTime.setUTCHours( now.getUTCHours() + localOffsetInHours);
+const locationOffsetInHours = data.timezone / 60 / 60
+const userOffsetInHours = new Date().getTimezoneOffset() / 60
+const totalOffset = userOffsetInHours + locationOffsetInHours
+
+// set "now" to the expected result
+localDateTime.setUTCHours( now.getUTCHours() + totalOffset);
+
+console.log(localDateTime)
 ```
 
 
@@ -102,3 +108,5 @@ localDateTime.setUTCHours( now.getUTCHours() + localOffsetInHours);
 ## Going further
 
 * https://ayushgp.github.io/date-and-time-in-javascript/
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString
