@@ -70,17 +70,17 @@ const localDateTime = new Date( localTimeInMilliseconds + currentUserOffsetInMil
 We can also represent all of that as: 
 
 ```js
-const currentTime = new Date( Date.now() + (data.timezone * 1000) + new Date().getTimezoneOffset() * 60 * 1000 )
+const localDateTime = new Date( Date.now() + (data.timezone * 1000) + new Date().getTimezoneOffset() * 60 * 1000 )
 ```
 
 ## Another solution
 ```js
 // get current time for the user
-const now = new Date();
+const localDateTime = new Date();
 // get location offset and add to the user offset (in hours)
 const localOffsetInHours = data.timezone / 60 / 60 + new Date().getTimezoneOffset() / 60
 // set "now" to the local DateTime
-now.setUTCHours( now.getUTCHours() + localOffsetInHours);
+localDateTime.setUTCHours( now.getUTCHours() + localOffsetInHours);
 ```
 
 
